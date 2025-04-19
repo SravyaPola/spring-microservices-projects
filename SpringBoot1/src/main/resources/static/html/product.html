@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<script src="../js/jquery-1.7.2.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$("#add").on("click", function () {
+				$("table").empty();
+				var product = {"prodName": $("#prodName").val(), "prodType": $("#prodType").val(), "prodPrice": $("#prodPrice").val()};
+
+				$.ajax({
+					url: "http://localhost:8282/addProduct",  // Replace with your API endpoint
+					type: "POST",
+					data: JSON.stringify(product),
+					contentType: "application/json",
+					dataType: "json",
+					success: function (response) {
+
+						response.forEach(function (product) {
+							let prodName = product.prodName || "N/A";
+							let prodType = product.prodType || "N/A";
+							let prodPrice = product.prodPrice || "-";
+
+							// Create a new table row
+							let row = `
+       					     <tr>
+              				<td>${prodName}</td>
+              				<td>${prodType}</td>
+              				<td>${prodPrice}</td>              
+            				</tr>
+          					`;
+							$("table").append(row);
+						});
+
+
+					},
+					error: function (jqXHR, textStatus, errorThrown) {
+						console.error("Error fetching data:", textStatus, errorThrown);
+					}
+				});
+
+			});
+		});
+
+	</script>
+</head>
+
+<body>
+	<h2>Product Details</h2>
+	Product Name: <input type='text' id='prodName' /><br>
+	Product Type: <input type='text' id='prodType' /><br>
+	Product Price: <input type='text' id='prodPrice' /><br>
+	<input type='button' value='Add' id='add' />
+
+	<table border='1'>
+		<tr>
+			<th>Name</th>
+			<th>Type</th>
+			<th>Price</th>
+		</tr>
+	</table>
+</body>
+
+</html>

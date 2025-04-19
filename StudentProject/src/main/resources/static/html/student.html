@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Student Page</title>
+	<link rel="stylesheet" type="text/css" href="../css/student.css">
+	</head>
+	<script src="../js/jquery-1.7.2.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$("#addStu").click(function () {
+				var student = {
+					name: $("#name").val(),
+					age: $("#age").val(),
+					gender: $("#gender").val(),
+					trainer: $("#trainer").val()
+				};
+
+				$.ajax({
+					url: "/api/students/addStudent",
+					type: "POST",
+					contentType: "application/json",
+					data: JSON.stringify(student),
+					success: function (response) {
+						$("#studentForm")[0].reset();
+					},
+					error: function () {
+						alert("Error adding student!");
+					}
+				});
+			});
+
+			$("#viewStu").click(function () {
+				$.ajax({
+					url: "/api/students/listStudents",
+					type: "GET",
+					success: function (data) {
+						var table = $("#stuTable");
+						table.html("<tr><th>ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Trainer</th></tr>");
+						$.each(data, function (index, student) {
+							var row = "<tr><td>" + student.id + "</td><td>" + student.name + "</td><td>" +
+								student.age + "</td><td>" + student.gender + "</td><td>" + student.trainer + "</td></tr>";
+							table.append(row);
+						});
+					},
+					error: function () {
+						alert("Error fetching students!");
+					}
+				});
+			});
+		});
+	</script>
+
+	</script>
+</head>
+
+<body>
+	<h2>STUDENT PAGE</h2>
+	<form id="studentForm">
+		<p>Student Name: <input type="text" id="name"></p>
+		<p>Student Age: <input type="number" id="age"></p>
+		<p>Student Gender: <input type="text" id="gender"></p>
+		<p>Student Trainer: <input type="text" id="trainer"></p>
+	</form>
+	<button id="addStu">Add Student</button>
+	<button id="viewStu">View Students</button>
+	<table id="stuTable" border="1"></table>
+</body>
+
+</html>

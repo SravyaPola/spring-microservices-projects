@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Hotel Management System</title>
+	<script src="../js/jquery-1.7.2.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			$("#hotelForm").submit(function (e) {
+				e.preventDefault();
+				var hotel = {
+					hotelname: $("#name").val(),
+					address: $("#address").val(),
+					contactDetails: $("#contact").val(),
+					email: $("#email").val()
+				};
+
+				$.ajax({
+					url: "/myPostHotel",
+					type: "POST",
+					contentType: "application/json",
+					data: JSON.stringify(hotel),
+					success: function (data) {
+						console.log(data)
+						alert("Hotel with UniqueId " + data.uniqueId + " is stored")
+						$("#hotelForm")[0].reset();
+					},
+					error: function () {
+						alert("Error adding Hotel!");
+					}
+
+				});
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<h2>Add Hotel:</h2>
+	<form id="hotelForm">
+		<p>Hotel Name: <input type="text" id="name"></p>
+		<p>Address: <input type="text" id="address"></p>
+		<p>Contact Details: <input type="text" id="contact"></p>
+		<p>Email: <input type="text" id="email"></p>
+		<button id="addHotel">Add Hotel</button>
+	</form>
+
+</body>
+
+</html>
